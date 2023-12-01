@@ -1,0 +1,149 @@
+---
+title: "activity 10"
+name: "Nathan Barr"
+date: "2023-11-09"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r loadPackages, message = FALSE}
+library("groundhog")
+pkgs <- c("ggplot2", "dplyr")
+groundhog.library(pkgs, '2023-11-25') 
+```
+# Nathan Barr
+
+# Collatz Conjecture
+
+# what nouns type object and verb type objects will we use 
+
+the nouns we need numbers that cause the function to stop. we also need to stop the function when it hits zero. and we need numbers to put into the function to see if it will stop or not. The verbs will need a function that will multiply the numbers and put them into the correct place for odd even or stop. they also need to go into the correct category such as odd or even.
+
+# pseudo-code plan 
+
+we need to write down the math behind how the collatz conjecture work. 
+we then need to create a function which will take two inputs that starts at zero and stops when it hits 1.
+we then need to come up with the comparisons which is when start is 1, start is even,or start is odd.
+and we need to make sure the the function keeps up to date when the numbers are changing and such. 
+
+# collatz conjecture function 
+
+```{r cars}
+library(ggplot2)
+library(dplyr)
+collatzCounter <- function(startInt, stopNum=0) { 
+  if (startInt == 1) {
+    return(stopNum)
+  } else if (startInt %% 2 == 0) {
+    collatzCounter(startInt = startInt / 2, stopNum = stopNum + 1)
+  } else {
+    collatzCounter(startInt = 3 * startInt + 1, stopNum = stopNum + 1)
+  }
+}
+```
+
+This is the function that we will use to finding the stopping numbers for which input we decide to put in if n=1 it will stop if it is a odd or even it will continue to different functions regarding what the number is. 
+
+## Historgram for stopping numbers
+
+
+we need to find the stopping times for the collatz conjecture for the first 10000 positive integers. So we need to create a function that takes an input and stops once the number equals 1 
+
+```{r, echo=FALSE}
+starting_integers <- 1:10000
+collatz_steps <- sapply(starting_integers, collatzCounter)
+
+ggplot(data = data.frame(steps = collatz_steps), aes(x = steps)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Histogram of stoppingNumbers", x = "StoppingNumbers", y = "Frequency")
+```
+
+this histogramshows us the stopping numbers from 0-10000 and the amount of times that it is stopped on that certain number throughout the collatz conjecture. 
+
+# diamonds 
+
+the diamonds dataset ranges from many different aspcts of a diamond such as cut, carat, depth and how it effects the price of the diamond. We have also made a dot plot so that we can see the price of the diamond compared to what cut of diamond it is. 
+
+```{r diamonds}
+sumTable <- diamonds %>%
+  group_by(cut) %>%
+  summarize(
+    count = n(),
+    minimum = min(x, na.rm = TRUE),
+    firstquin = quantile(x, probs = .2, na.rm = TRUE),
+    secondQuin = quantile(x, probs=.4, na.rm = TRUE),
+    median = median(x, na.rm = TRUE),
+    thirdQuin = quantile(x, probs = .6, na.rm = TRUE),
+    forthQuin = quantile(x, probs = .8, na.rm = TRUE),
+    max = max(x, na.rm = TRUE),
+    sam = mean(x, na.rm = TRUE),
+    sasd = sd(x, na.rm = TRUE)
+  )
+sumTable
+```
+
+
+we have created a summary table grouped by the cut of the diamond so we can find the quartiles, min, median, max, standard deviation, and the mean of the price for that certain cut of diamond. 
+
+## Plot
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+ggplot( data=diamonds, mapping=aes( x=depth, y=price, color=cut, shape=cut ) ) + geom_point() + 
+  labs( x="depth", y="price", color="cut", shape="cut", title="price by depth" )
+```
+
+e have also made a dot plot so that we can see the price of the diamond compared to what cut of diamond it is, so we will be able to look what cuts of diamonds are more expensive and which ones are cheaper. 
+
+# reflection
+
+My time in stat 184 we have developed many different skills in R. we have learned how to use the ggplot2 package to make visuals as you can see in this activity we have made a histogram for the stopping numbers, and a dot plot showing the price by the depth of the diamond. we also learned how to make data tidy, and group it so that when we want to make data summary or certain visual plot its not completely raw data and actually means something. In this activity we grouped the data by the cut and made a summary table comparing what cut it was to the amount it cost. We have learned many other packages in R and what certain commands do just like the if and else statement that we used in this acitivity. 
+
+\newpage
+# Code Appendix
+``` {r codeAppedix}
+#| ref.label = knitr::all_labels(),
+#| echo = TRUE,
+#| eval = FALSE
+
+collatzCounter <- function(startInt, stopNum=0) { 
+  if (startInt == 1) {
+    return(stopNum)
+  } else if (startInt %% 2 == 0) {
+    collatzCounter(startInt = startInt / 2, stopNum = stopNum + 1)
+  } else {
+    collatzCounter(startInt = 3 * startInt + 1, stopNum = stopNum + 1)
+  }
+}
+
+starting_integers <- 1:10000
+collatz_steps <- sapply(starting_integers, collatzCounter)
+
+ggplot(data = data.frame(steps = collatz_steps), aes(x = steps)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Histogram of stoppingNumbers", x = "StoppingNumbers", y = "Frequency")
+
+sumTable <- diamonds %>%
+  group_by(cut) %>%
+  summarize(
+    count = n(),
+    minimum = min(x, na.rm = TRUE),
+    firstquin = quantile(x, probs = .2, na.rm = TRUE),
+    secondQuin = quantile(x, probs=.4, na.rm = TRUE),
+    median = median(x, na.rm = TRUE),
+    thirdQuin = quantile(x, probs = .6, na.rm = TRUE),
+    forthQuin = quantile(x, probs = .8, na.rm = TRUE),
+    max = max(x, na.rm = TRUE),
+    sam = mean(x, na.rm = TRUE),
+    sasd = sd(x, na.rm = TRUE)
+  )
+sumTable
+
+ggplot( data=diamonds, mapping=aes( x=depth, y=price, color=cut, shape=cut ) ) + geom_point() + 
+  labs( x="depth", y="price", color="cut", shape="cut", title="price by depth" )
+```
+
